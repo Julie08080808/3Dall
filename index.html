@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>3D 模型檢視器</title>
+    <style>
+        /* 設定 Sketchfab 嵌入模型的樣式 */
+        .sketchfab-embed-wrapper {
+            margin-bottom: 20px; /* 在下方添加間距 */
+        }
+
+        /* 設定 BabylonJS 模型檢視器的容器樣式 */
+        .viewerContainer {
+            width: 400px;  /* 設定寬度 */
+            height: 500px; /* 設定高度 */
+            image-rendering: pixelated; /* 防止縮小後變模糊 */
+        }
+    </style>
+    <script src="https://cdn.babylonjs.com/viewer/babylon.viewer.js"></script>
+    <script>
+        // 這個函數會載入選擇的 BabylonJS 模型
+        function loadit(modelUrl) {
+            if(modelUrl) {
+                // 取得 BabylonJS 檢視器
+                let viewer = BabylonViewer.viewerManager.getViewerById('viewerID');
+                let temp = viewer.templateManager.getTemplate('navBar');
+                let param = temp._configuration;
+                param.params.hideVr = false;  // 顯示 VR 模式
+                param.params.disableOnFullscreen = true;  // 在全螢幕模式下禁用
+                temp.updateParams(param);  // 更新設定
+                viewer.loadModel(modelUrl);  // 載入模型
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>3D 模型檢視器</h1>
+    
+    <!-- Sketchfab 模型嵌入區域 -->
+    <div class="sketchfab-embed-wrapper">
+        <iframe title="Tamao" frameborder="0" style="height: 500px; width: 450px;" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/266fbb10f0e249adbf2764a261cd6c29/embed"></iframe>
+    </div>
+
+    <!-- BabylonJS 模型檢視器區域 -->
+    <div>
+        <!-- 選擇模型的下拉選單 -->
+        <select onchange="loadit(this.value)">
+            <option value="">選擇模型</option>
+            <option value="./models/Tamao.glb">Tamao</option>
+        </select>
+        
+        <!-- BabylonJS 檢視器的顯示區域 -->
+        <div class="viewerContainer">
+            <babylon id="viewerID"><vr></vr></babylon>
+        </div>
+    </div>
+</body>
+</html>
