@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>my 3D homework</title>
+    <title>我的 3D 作業</title>
     <style>
+        /* 頁面整體樣式 */
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -38,149 +39,57 @@
         .link-container a:hover {
             background-color: #45a049;
         }
-    </style>
-</head>
-<body>
-    <h1>歡迎來到 3D 模型展示頁</h1>
 
-    <div class="link-container">
-        <!-- 這裡是專門的導向連結，點擊後會跳轉到展示頁 -->
-        <a href="models.html">點擊查看不同的 3D 模型展示</a>
-    </div>
-</body>
-</html>
-2. 模型展示頁面 (models.html)
-這是 models.html，當用戶點擊首頁的連結後會跳轉到此頁面，並在這裡顯示兩個不同的模型展示。
-
-html
-複製
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>3D 模型展示</title>
-    <style>
-        /* 頁面整體樣式 */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        /* 標題樣式 */
-        h1 {
-            text-align: center;
-            padding: 20px;
-            background-color: #333;
-            color: white;
-        }
-
-        /* 模型選擇區塊 */
-        .model-selection {
-            display: flex;
-            justify-content: center;
+        /* 3D 模型容器 */
+        .sketchfab-embed-wrapper,
+        .viewerContainer {
             margin-top: 50px;
-        }
-
-        .model-selection div {
-            background-color: #fff;
-            border: 2px solid #333;
-            padding: 20px;
-            margin: 10px;
-            cursor: pointer;
+            display: inline-block;
             text-align: center;
-            width: 200px;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
-
-        .model-selection div:hover {
-            background-color: #ddd;
-        }
-
-        /* 模型顯示區域 */
-        .model-container {
-            display: none;
-            justify-content: center;
-            margin-top: 50px;
         }
 
         iframe {
-            width: 600px;
-            height: 400px;
+            width: 450px;
+            height: 500px;
         }
 
         .viewerContainer {
-            width: 600px;
-            height: 400px;
-            margin-top: 20px;
+            width: 400px;
+            height: 500px;
         }
     </style>
-</head>
-<body>
-    <h1>3D 模型展示</h1>
-
-    <!-- 模型選擇區塊 -->
-    <div class="model-selection">
-        <div id="sketchfab" onclick="showModel('sketchfab')">
-            <h3>Sketchfab 模型</h3>
-            <p>點擊查看 Sketchfab 模型</p>
-        </div>
-        <div id="babylonjs" onclick="showModel('babylonjs')">
-            <h3>BabylonJS 模型</h3>
-            <p>點擊查看 BabylonJS 模型</p>
-        </div>
-    </div>
-
-    <!-- 模型展示區域 -->
-    <div id="sketchfab-model" class="model-container">
-        <h2>Sketchfab 模型展示</h2>
-        <iframe src="https://sketchfab.com/models/266fbb10f0e249adbf2764a261cd6c29/embed" frameborder="0" allowfullscreen></iframe>
-    </div>
-
-    <div id="babylonjs-model" class="model-container">
-        <h2>BabylonJS 模型展示</h2>
-        <!-- BabylonJS 模型選擇和展示區域 -->
-        <select onchange="loadit(this.value)">
-            <option value="">選擇模型</option>
-            <option value="./models/Tamao.glb">Tamao</option>
-        </select>
-        <div class="viewerContainer">
-            <babylon id="viewerID"><vr></vr></babylon>
-        </div>
-    </div>
-
     <script src="https://cdn.babylonjs.com/viewer/babylon.viewer.js"></script>
     <script>
-        // 顯示選擇的模型
-        function showModel(modelType) {
-            // 隱藏所有模型區域
-            document.getElementById("sketchfab-model").style.display = "none";
-            document.getElementById("babylonjs-model").style.display = "none";
-
-            // 顯示選中的模型區域
-            if (modelType === 'sketchfab') {
-                document.getElementById("sketchfab-model").style.display = "block";
-            } else if (modelType === 'babylonjs') {
-                document.getElementById("babylonjs-model").style.display = "block";
-            }
-        }
-
-        // 載入 BabylonJS 模型
         function loadit(modelUrl) {
-            if(modelUrl) {
+            if (modelUrl) {
                 let viewer = BabylonViewer.viewerManager.getViewerById('viewerID');
                 let temp = viewer.templateManager.getTemplate('navBar');
                 let param = temp._configuration;
                 param.params.hideVr = false;
                 param.params.disableOnFullscreen = true;
                 temp.updateParams(param);
-                viewer.loadModel(modelUrl);  // 載入模型
+                viewer.loadModel(modelUrl);
             }
         }
     </script>
+</head>
+<body>
+    <h1>3D 模型展示頁面</h1>
+
+    <!-- Sketchfab 模型嵌入 -->
+    <div class="sketchfab-embed-wrapper">
+        <h3>這是我的 Sketchfab 3D 模型</h3>
+        <iframe title="Tamao" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/266fbb10f0e249adbf2764a261cd6c29/embed"></iframe>
+    </div>
+
+    <!-- BabylonJS 模型選擇和展示 -->
+    <div class="viewerContainer">
+        <h3>這是我的 BabylonJS 3D 模型</h3>
+        <select onchange="loadit(this.value)">
+            <option value="">選擇模型</option>
+            <option value="./models/Tamao.glb">Tamao</option>
+        </select>
+        <div id="viewerID"><vr></vr></div>
+    </div>
 </body>
 </html>
