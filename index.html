@@ -4,57 +4,127 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>3D 模型檢視器</title>
+    <title>3D 模型展示</title>
     <style>
-        /* 設定 Sketchfab 嵌入模型的樣式 */
-        .sketchfab-embed-wrapper {
-            margin-bottom: 20px; /* 在下方添加間距 */
+        /* 頁面整體樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
         }
 
-        /* 設定 BabylonJS 模型檢視器的容器樣式 */
+        /* 標題樣式 */
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+        }
+
+        /* 模型選擇區塊 */
+        .model-selection {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        .model-selection div {
+            background-color: #fff;
+            border: 2px solid #333;
+            padding: 20px;
+            margin: 10px;
+            cursor: pointer;
+            text-align: center;
+            width: 200px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .model-selection div:hover {
+            background-color: #ddd;
+        }
+
+        /* 模型顯示區域 */
+        .model-container {
+            display: none;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        iframe {
+            width: 600px;
+            height: 400px;
+        }
+
         .viewerContainer {
-            width: 400px;  /* 設定寬度 */
-            height: 500px; /* 設定高度 */
-            image-rendering: pixelated; /* 防止縮小後變模糊 */
+            width: 600px;
+            height: 400px;
+            margin-top: 20px;
         }
     </style>
-    <script src="https://cdn.babylonjs.com/viewer/babylon.viewer.js"></script>
-    <script>
-        // 這個函數會載入選擇的 BabylonJS 模型
-        function loadit(modelUrl) {
-            if(modelUrl) {
-                // 取得 BabylonJS 檢視器
-                let viewer = BabylonViewer.viewerManager.getViewerById('viewerID');
-                let temp = viewer.templateManager.getTemplate('navBar');
-                let param = temp._configuration;
-                param.params.hideVr = false;  // 顯示 VR 模式
-                param.params.disableOnFullscreen = true;  // 在全螢幕模式下禁用
-                temp.updateParams(param);  // 更新設定
-                viewer.loadModel(modelUrl);  // 載入模型
-            }
-        }
-    </script>
 </head>
 <body>
-    <h1>3D 模型檢視器</h1>
-    
-    <!-- Sketchfab 模型嵌入區域 -->
-    <div class="sketchfab-embed-wrapper">
-        <iframe title="Tamao" frameborder="0" style="height: 500px; width: 450px;" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/266fbb10f0e249adbf2764a261cd6c29/embed"></iframe>
+    <h1>3D 模型展示</h1>
+
+    <!-- 模型選擇區塊 -->
+    <div class="model-selection">
+        <div id="sketchfab" onclick="showModel('sketchfab')">
+            <h3>Sketchfab 模型</h3>
+            <p>點擊查看 Sketchfab 模型</p>
+        </div>
+        <div id="babylonjs" onclick="showModel('babylonjs')">
+            <h3>BabylonJS 模型</h3>
+            <p>點擊查看 BabylonJS 模型</p>
+        </div>
     </div>
 
-    <!-- BabylonJS 模型檢視器區域 -->
-    <div>
-        <!-- 選擇模型的下拉選單 -->
+    <!-- 模型展示區域 -->
+    <div id="sketchfab-model" class="model-container">
+        <h2>Sketchfab 模型展示</h2>
+        <iframe src="https://sketchfab.com/models/266fbb10f0e249adbf2764a261cd6c29/embed" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <div id="babylonjs-model" class="model-container">
+        <h2>BabylonJS 模型展示</h2>
+        <!-- BabylonJS 模型選擇和展示區域 -->
         <select onchange="loadit(this.value)">
             <option value="">選擇模型</option>
             <option value="./models/Tamao.glb">Tamao</option>
         </select>
-        
-        <!-- BabylonJS 檢視器的顯示區域 -->
         <div class="viewerContainer">
             <babylon id="viewerID"><vr></vr></babylon>
         </div>
     </div>
+
+    <script src="https://cdn.babylonjs.com/viewer/babylon.viewer.js"></script>
+    <script>
+        // 顯示選擇的模型
+        function showModel(modelType) {
+            // 隱藏所有模型區域
+            document.getElementById("sketchfab-model").style.display = "none";
+            document.getElementById("babylonjs-model").style.display = "none";
+
+            // 顯示選中的模型區域
+            if (modelType === 'sketchfab') {
+                document.getElementById("sketchfab-model").style.display = "block";
+            } else if (modelType === 'babylonjs') {
+                document.getElementById("babylonjs-model").style.display = "block";
+            }
+        }
+
+        // 載入 BabylonJS 模型
+        function loadit(modelUrl) {
+            if(modelUrl) {
+                let viewer = BabylonViewer.viewerManager.getViewerById('viewerID');
+                let temp = viewer.templateManager.getTemplate('navBar');
+                let param = temp._configuration;
+                param.params.hideVr = false;
+                param.params.disableOnFullscreen = true;
+                temp.updateParams(param);
+                viewer.loadModel(modelUrl);  // 載入模型
+            }
+        }
+    </script>
 </body>
 </html>
